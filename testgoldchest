@@ -1,0 +1,26 @@
+local Utility = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xerocas/Releases/main/Arcane%20Reborn/Utility.lua"))()
+
+local RemoteKey = Utility:GetRemoteKey()
+local ChestOpened = Utility:GetRemote("ChestOpened")
+
+local function ChestFarm()  
+    local Chest = Utility:GetChest()
+    Utility:Tween(Chest.TopTrim, shared.ChestFarm.Speed)
+    ChestOpened:FireServer(Chest, RemoteKey.Chest)
+end
+
+task.spawn(function()
+    while true do
+        if not shared.ChestFarm.Enabled then
+            local Character = Utility:GetCharacter()
+            if Character.HumanoidRootPart and Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
+                Character.HumanoidRootPart.BodyVelocity:Destroy()
+            end
+
+            break
+        end
+
+       ChestFarm()
+       task.wait(shared.ChestFarm.Wait)
+    end
+end)
