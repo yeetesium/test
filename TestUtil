@@ -1,0 +1,109 @@
+local Utility = {}
+
+function Utility:GetCharacter()
+    local LocalPlayer = game:GetService("Players").LocalPlayer
+    local Character = LocalPlayer.Character
+
+    return Character
+end
+
+function Utility:Tween(object, speed)
+    local TweenService = game:GetService("TweenService")
+    local Character = self:GetCharacter()
+
+    local Speed = speed or 100
+    local TweenInfo = TweenInfo.new((Character.HumanoidRootPart.Position - object.Position).Magnitude/Speed, Enum.EasingStyle.Quad)
+    local Tween = TweenService:Create(Character.HumanoidRootPart, TweenInfo, {CFrame = (object.CFrame)})
+    
+    if not Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
+        local BV = Instance.new("BodyVelocity")
+        BV.Parent = Character.HumanoidRootPart
+        BV.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+        BV.Velocity = Vector3.new(0,0,0)
+    end
+    
+    Tween:Play()
+    Tween.Completed:Wait()
+end
+
+function Utility:GetRemoteKey()
+    local RemoteKeys = {}
+    local tables = {}
+
+    for i,v in ipairs(getgc()) do
+        if typeof(v) ~= "function" and getfenv(v).script ~= LocalChestOpener then
+            continue
+        end
+    
+        for i,v in ipairs(getupvalues(v)) do
+            if typeof(v) == "table" then
+                tables = v
+            end
+        end  
+    
+        for i,v in ipairs(tables) do
+            if typeof(v) == "string" and string.match(v, "%d%l") then
+                RemoteKeys.Chest = v
+            end
+        end  
+    end
+
+    return RemoteKeys
+end
+
+function Utility:GetRemote(remote)
+    local Events = game:GetService("ReplicatedStorage").Remotes
+
+    for i,v in ipairs(Events:GetDescendants()) do
+        if v:IsA("RemoteEvent") or v:IsA("RemoteFunction") then
+            if string.match(v.Name, remote) then
+                return v
+            end
+        end
+    end
+end
+
+function Utility:GetChest()
+    local Character = self:GetCharacter()
+    local MinDistance = math.huge
+    local ClosestObject
+    
+local ChestFolder
+    for i,v in ipairs(workspace:GetChildren()) do
+        if v:IsA("Folder") and v:FindFirstChild("Chest") and
+        has "ChestGlow" then
+            ChestFolder = v
+        end
+    end
+
+    for i, v in ipairs(ChestFolder:GetChildren()) do
+        if v.Name == "Chest" and not v.Opened.Value and v:FindFirstChild("Top") then
+            local Distance = (Character.HumanoidRootPart.Position - v.Pivot.Position).Magnitude
+            
+            if Distance < MinDistance then
+                MinDistance, ClosestObject = Distance, v
+            end
+        end
+    end
+    
+    return ClosestObject
+end
+
+function Utility:GetRod()
+    local LocalPlayer = game:GetService("Players").LocalPlayer
+    local Character = self:GetCharacter()
+    
+    for i,v in ipairs(LocalPlayer.Backpack:GetChildren()) do
+        if v:IsA("Tool") and string.match(v.Name, "Rod") then
+            return v
+        end
+    end
+
+    for i,v in ipairs(Character:GetChildren()) do
+        if v:IsA("Tool") and string.match(v.Name, "Rod") then
+            return v
+        end
+    end
+end
+
+return Utility
