@@ -68,7 +68,7 @@ function Utility:GetChest()
     local MinDistance = math.huge
     local ClosestObject
     
-local ChestFolder
+    local ChestFolder
     for i,v in ipairs(workspace:GetChildren()) do
         if v:IsA("Folder") and v:FindFirstChild("Chest") then
             ChestFolder = v
@@ -76,8 +76,8 @@ local ChestFolder
     end
 
     for i, v in ipairs(ChestFolder:GetChildren()) do
-        if v.Name == "Chest" and not v.Opened.Value and v:FindFirstChild("Top") then
-            local Distance = (Character.HumanoidRootPart.Position - v.ChestGlow.Position).Magnitude
+        if v.Name == "Chest" and not v.Opened.Value and v:FindFirstChild("ChestGlow") then
+            local Distance = (Character.HumanoidRootPart.Position - v.Pivot.Position).Magnitude
             
             if Distance < MinDistance then
                 MinDistance, ClosestObject = Distance, v
