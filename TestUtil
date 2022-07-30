@@ -70,8 +70,7 @@ function Utility:GetChest()
     
 local ChestFolder
     for i,v in ipairs(workspace:GetChildren()) do
-        if v:IsA("Folder") and v:FindFirstChild("Chest") and
-        has "ChestGlow" then
+        if v:IsA("Folder") and v:FindFirstChild("ChestGlow") then
             ChestFolder = v
         end
     end
