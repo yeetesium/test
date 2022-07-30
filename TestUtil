@@ -1,4 +1,4 @@
-local Utility = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xerocas/Releases/main/Arcane%20Reborn/Utility.lua"))()
+local Utility = loadstring(game:HttpGet("https://raw.githubusercontent.com/yeetesium/test/main/EditedUtil"))()
 
 local RemoteKey = Utility:GetRemoteKey()
 local ChestOpened = Utility:GetRemote("ChestOpened")
